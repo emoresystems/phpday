@@ -7,17 +7,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'] ?? '';
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
+    $role = 'writer';
 
     // haspass
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // save values to db
     try{
-        $sql = "INSERT INTO register (username, email, password) VALUES (:username, :email, :password)";
+        $sql = "INSERT INTO register (username, email, password, role) VALUES (:username, :email, :password, :role)";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(':role', $role);
 
         $stmt-> execute();
         // echo "registration successful";
@@ -27,7 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "an error occured " . $e->getMessage();
     }
 }
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
