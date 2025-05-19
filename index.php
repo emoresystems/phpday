@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="md:ml-6">
-                   <a href="./register.php">
+                   <a href="./auth/register.php">
                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
                        Register
                     </button>

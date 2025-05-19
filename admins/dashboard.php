@@ -2,7 +2,7 @@
 session_start();
 // Check if user is logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
+    header("Location: ../auth/login.php");
     exit;
 }
 ?>
@@ -36,7 +36,7 @@ if (!isset($_SESSION['username'])) {
                 </div>
                 <div class="flex items-center space-x-4">
                     <span class="text-sm font-medium text-gray-700">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                    <a href="./logout.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                    <a href="../auth/logout.php" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
                         Logout
                     </a>
                 </div>

@@ -1,46 +1,34 @@
 <?php
-
-session_start();
 // include './conn.php';
-include './conn.php';
-
-// login
+include '../db/conn.php';
+// register
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+    // get values from form
+    $username = $_POST['username'] ?? '';
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
+    $role = 'writer';
 
-    $sql = "SELECT * FROM register WHERE email = :email";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':email', $email);
-    $stmt->execute();
+    // haspass
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // all users with the email provided
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    // save values to db
+    try{
+        $sql = "INSERT INTO register (username, email, password, role) VALUES (:username, :email, :password, :role)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(':role', $role);
 
-    // check specific user from array
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['email'] = $user['email'];
-        $_SESSION['role'] = $user['role'];
-        $_SESSION['username'] = $user['username'];
+        $stmt-> execute();
+        // echo "registration successful";
+        header("Location: login.php");
 
-
-        // echo  $_SESSION['role'];
-        // header("Location: dashboard.php");
-
-        if ($_SESSION['role'] === "admin") {
-            // echo "hello admin";
-            header("Location: dashboard.php");
-        }else{
-            // echo "not admin";
-            header("Location: writer.php");
-        }
-        exit;
-    } else {
-        echo "Invalid credentials";
+    }catch(PDOException $e){
+        echo "an error occured " . $e->getMessage();
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -55,9 +43,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
     <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8 space-y-6">
-        <h2 class="text-2xl font-bold text-center text-gray-800">Login Form</h2>
+        <h2 class="text-2xl font-bold text-center text-gray-800">Register Form</h2>
 
         <form action="" method="POST" class="space-y-5">
+
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <input type="text" name="username" id="name"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
 
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -76,6 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 Submit
             </button>
         </form>
+        <a href="login.php"><p> registered, click here to login</p></a>
     </div>
 
 </body>
