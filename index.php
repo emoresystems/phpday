@@ -73,7 +73,43 @@
         </div>
     </section>
 
-   
+   <!-- Articles Section -->
+<section class="py-12 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="lg:text-center mb-10">
+      <h2 class="text-base text-blue-600 font-semibold tracking-wide uppercase">Latest Articles</h2>
+      <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+        Stay Updated
+      </p>
+    </div>
+
+    <ul class="space-y-8">
+      <?php
+      // connect to DB
+      include '/var/www/html/daySepPhp/db/conn.php'; 
+
+      try {
+          $stmt = $conn->query("SELECT * FROM articles ORDER BY id DESC");
+          $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+          if (count($articles) === 0) {
+              echo "<li class='text-gray-600 text-center'>No articles found.</li>";
+          } else {
+              foreach ($articles as $article) {
+                  echo "<li class='border-b pb-4'>";
+                  echo "<h3 class='text-xl font-semibold text-gray-800'>" . htmlspecialchars($article['title']) . "</h3>";
+                  echo "<p class='text-gray-700 mt-1'>" . nl2br(htmlspecialchars($article['description'])) . "</p>";
+                  echo "</li>";
+              }
+          }
+      } catch(PDOException $e) {
+          echo "<li class='text-red-600'>Error fetching articles: " . $e->getMessage() . "</li>";
+      }
+      ?>
+    </ul>
+  </div>
+</section>
+
 
   
 

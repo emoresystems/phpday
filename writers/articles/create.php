@@ -1,4 +1,28 @@
+<?php
+// include './conn.php';
+include '/var/www/html/daySepPhp/db/conn.php';
+// register
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // get values from form
+    $title = $_POST['title'] ?? '';
+    $description = $_POST['description'] ?? '';
 
+
+    // save values to db
+    try{
+        $sql = "INSERT INTO articles (title, description) VALUES (:title, :description)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':description', $description);
+
+        $stmt-> execute();
+        echo "article created successfully";
+
+    }catch(PDOException $e){
+        echo "an error occured " . $e->getMessage();
+    }
+}
+?>
 <?php require('../includes/header.php'); ?>
 
 <div class="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
